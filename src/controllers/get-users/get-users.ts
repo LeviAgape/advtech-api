@@ -1,9 +1,21 @@
-import { GetUsersRepository, IGetUsersController } from "./protocols";
+import { GetUsersRepository, IGetUsersController } from "./protocol-users";
 
 export class GetUsersController implements IGetUsersController {
-  getUsersRepository: GetUsersRepository;
-  constructor(getUsersRepository: GetUsersRepository) {
-    this.getUsersRepository = getUsersRepository;
+  constructor(private readonly getUsersRepository: GetUsersRepository) {}
+
+  async handle() {
+    try {
+      const users = await this.getUsersRepository.getUsers();
+
+      return {
+        statusCode: 200,
+        body: users,
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: "Error",
+      };
+    }
   }
-  handle() {}
 }

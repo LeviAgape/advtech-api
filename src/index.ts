@@ -8,6 +8,8 @@ import { ProcessController } from "./controllers/process/process-controller";
 config();
 const app = express();
 
+app.use(express.json());
+
 const port = process.env.PORT || 8000;
 
 app.get("/users", async (req, res) => {
@@ -50,6 +52,20 @@ app.get("/process", async (req, res) => {
   const getProcess = await getProcessController.getProcess();
 
   res.send(getProcess).status(200);
-})
+});
+
+app.post("/process", async (req, res) => {
+  const prismaProcessRepository = new PrismaProcessRepository();
+  const processController = new ProcessController(prismaProcessRepository);
+
+  try {
+    const processData = req.body; 
+    const createdProcess = await processController.postProcess(req, res); 
+    res.status(201).json(createdProcess); 
+  } catch (error) {
+    res.status(500).json({ error: "Error creating process" });
+  }
+});;
+
 
 app.listen(port, () => console.log(`listening on ports ${port}!`));

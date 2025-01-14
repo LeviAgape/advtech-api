@@ -1,8 +1,8 @@
 import { PrismaProcessRepository } from "../../repositories/process";
-import { IGetProcessController } from "./protocol-process";
-import { Process } from "../../models/process"; // Ajuste conforme necessário
+import { Process } from "../../models/process"; 
+import { Request, Response } from "express"; 
 
-export class ProcessController implements IGetProcessController {
+export class ProcessController implements ProcessController {
   constructor(
     private readonly prismaProcessRepository: PrismaProcessRepository
   ) {}
@@ -10,9 +10,20 @@ export class ProcessController implements IGetProcessController {
   async getProcess(): Promise<Process[]> {
     try {
       const getProcess = await this.prismaProcessRepository.getProcess();
-      return getProcess; 
+      return getProcess;
     } catch (error) {
-      throw new Error("Error fetching processes"); 
+      throw new Error("Error fetching processes");
+    }
+  }
+
+  async postProcess(req: Request, res: Response): Promise<void> {
+    try {
+      const processData = req.body; 
+      const createdProcess = await this.prismaProcessRepository.postProcess(processData); 
+      res.status(201).json(createdProcess); 
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error creating process" });
     }
   }
 }

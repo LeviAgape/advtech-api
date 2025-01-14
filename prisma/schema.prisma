@@ -24,26 +24,39 @@ model User {
 }
 
   model Process {
-  id             String   @id @default(uuid()) // Identificador único
-  numberProcess  String   // Número do Processo
-  forumName      String   // Nome do Fórum
-  courtName      String   // Nome da Vara
-  courtNumber    String   // Número da Vara
-  author         String   // Advogado líder do processo
-  defendantName  String   // Réu
-  processStatus  String?  // Situação Processual (opcional)
-  status         String   // Situação de Status ("available" | "archived" | "processing")
-  pending        String?  // Pendências (opcional)
-  note           String?  // Observação (opcional)
-  processDate    DateTime // Data do Processo
-  partner        String   // Parceiro
-  department     String   // Departamento
-  processOutcome String   // Resultado do Processo ("won" | "lost" | "undefined")
-  value          Float    // Valor
-  portion        Int      // Parcela
-  createdAt      DateTime @default(now()) // Data de criação
-  updatedAt      DateTime @updatedAt      // Data de atualização
+  id String @id @default(uuid())
+  numberProcess String
+  forumName String
+  courtName String
+  courtNumber String
+  author String
+  defendantName String
+  processStatus String? // Se for string ou opcional
+  status ProcessStatus // Definir como um enum no Prisma
+  pending String?
+  note String?
+  processDate DateTime
+  partner String
+  department String
+  processOutcome ProcessOutcome
+  value Float
+  portion Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@map("processes") // Nome da tabela no banco de dados
+  @@map("processes")
 }
+
+enum ProcessStatus {
+  available
+  archived
+  processing
+}
+
+enum ProcessOutcome {
+  won
+  lost
+  undefined
+}
+
 

@@ -1,7 +1,9 @@
 import express from "express";
 import { config } from "dotenv";
-import { GetUsersController } from "./controllers/get-users/get-users";
-import { PrismaUserRepository } from "./repositories/get-users";
+import { GetUsersController } from "./controllers/get-users/users-controller";
+import { PrismaUserRepository } from "./repositories/users";
+import { PrismaProcessRepository } from "./repositories/process";
+import { ProcessController } from "./controllers/process/process-controller";
 
 config();
 const app = express();
@@ -29,17 +31,25 @@ app.get("/list", async (req, res) => {
 });
 
 app.get("/id/:id", async (req, res) => {
-
   const { id } = req.params;
 
   const prismaUserRepository = new PrismaUserRepository();
 
-  const getUsersController = new GetUsersController(prismaUserRepository)
+  const getUsersController = new GetUsersController(prismaUserRepository);
 
   const { body, statusCode } = await getUsersController.findById(id);
 
   res.send(body).status(statusCode);
+});
 
+app.get("/process", async (req, res) => {
+  const prismaProcessRepository = new PrismaProcessRepository();
+
+  const getProcessController = new ProcessController(prismaProcessRepository);
+
+  const getProcess = await getProcessController.getProcess();
+
+  res.send(getProcess).status(200);
 })
 
 app.listen(port, () => console.log(`listening on ports ${port}!`));

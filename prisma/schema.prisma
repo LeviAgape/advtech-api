@@ -22,3 +22,28 @@ model User {
 
   @@map("users")
 }
+
+  model Process {
+  id             String   @id @default(uuid()) // Identificador único
+  numberProcess  String   // Número do Processo
+  forumName      String   // Nome do Fórum
+  courtName      String   // Nome da Vara
+  courtNumber    String   // Número da Vara
+  author         String   // Advogado líder do processo
+  defendantName  String   // Réu
+  processStatus  String?  // Situação Processual (opcional)
+  status         String   // Situação de Status ("available" | "archived" | "processing")
+  pending        String?  // Pendências (opcional)
+  note           String?  // Observação (opcional)
+  processDate    DateTime // Data do Processo
+  partner        String   // Parceiro
+  department     String   // Departamento
+  processOutcome String   // Resultado do Processo ("won" | "lost" | "undefined")
+  value          Float    // Valor
+  portion        Int      // Parcela
+  createdAt      DateTime @default(now()) // Data de criação
+  updatedAt      DateTime @updatedAt      // Data de atualização
+
+  @@map("processes") // Nome da tabela no banco de dados
+}
+

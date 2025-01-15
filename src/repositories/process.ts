@@ -19,7 +19,7 @@ export class PrismaProcessRepository implements IGetProcessController {
     status: "available" | "archived" | "processing"; 
     pending?: string | null; 
     note?: string | null; 
-    processDate: Date; 
+    processDate: string; 
     partner: string; 
     department: string; 
     processOutcome: "won" | "lost" | "undefined"; 

@@ -4,11 +4,21 @@ import { GetUsersController } from "./controllers/get-users/users-controller";
 import { PrismaUserRepository } from "./repositories/users";
 import { PrismaProcessRepository } from "./repositories/process";
 import { ProcessController } from "./controllers/process/process-controller";
+import cors from 'cors';
 
 config();
 const app = express();
 
 app.use(express.json());
+
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Substitua pela URL do front-end
+    methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
+    allowedHeaders: ["Content-Type", "Authorization"], // Cabeçalhos permitidos
+  })
+);
 
 const port = process.env.PORT || 8000;
 
@@ -59,13 +69,12 @@ app.post("/process", async (req, res) => {
   const processController = new ProcessController(prismaProcessRepository);
 
   try {
-    const processData = req.body; 
-    const createdProcess = await processController.postProcess(req, res); 
-    res.status(201).json(createdProcess); 
+    const processData = req.body;
+    const createdProcess = await processController.postProcess(req, res);
+    res.status(201).json(createdProcess);
   } catch (error) {
     res.status(500).json({ error: "Error creating process" });
   }
-});;
-
+});
 
 app.listen(port, () => console.log(`listening on ports ${port}!`));

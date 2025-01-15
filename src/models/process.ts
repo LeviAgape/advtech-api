@@ -10,7 +10,7 @@ export interface Process {
   status: "available" | "archived" | "processing"; // Situação de status
   pending?: string | null; // Pendências (opcional)
   note?: string | null; // Observação (opcional)
-  processDate: Date; // Data do processo
+  processDate: string; // Data do processo
   partner: string; // Parceiro
   department: string; // Departamento
   processOutcome: "won" | "lost" | "undefined"; // Resultado do processo

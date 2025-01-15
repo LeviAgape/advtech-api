@@ -35,7 +35,7 @@ model User {
   status ProcessStatus // Definir como um enum no Prisma
   pending String?
   note String?
-  processDate DateTime
+  processDate String
   partner String
   department String
   processOutcome ProcessOutcome

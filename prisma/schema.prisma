@@ -59,4 +59,12 @@ enum ProcessOutcome {
   undefined
 }
 
+model Petition {
+  id String @id @default(uuid())
+  author String 
+  defendantName String 
+  processType String
+  partner String
+}
+
 

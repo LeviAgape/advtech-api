@@ -4,13 +4,14 @@ import { GetUsersController } from "./controllers/get-users/users-controller";
 import { PrismaUserRepository } from "./repositories/users";
 import { PrismaProcessRepository } from "./repositories/process";
 import { ProcessController } from "./controllers/process/process-controller";
-import cors from 'cors';
+import cors from "cors";
+import { PrismaPetitionRepository } from "./repositories/petition";
+import { PetitionController } from "./controllers/petition/petition-controller";
 
 config();
 const app = express();
 
 app.use(express.json());
-
 
 app.use(
   cors({
@@ -70,10 +71,36 @@ app.post("/process", async (req, res) => {
 
   try {
     const processData = req.body;
-    const createdProcess = await processController.postProcess(req, res);
+    const createdProcess = await processController.postProcess(processData);
     res.status(201).json(createdProcess);
   } catch (error) {
     res.status(500).json({ error: "Error creating process" });
+  }
+});
+
+app.get("/petition", async (req, res) => {
+  try {
+    const prismaPetitionRepository = new PrismaPetitionRepository();
+    const petitionController = new PetitionController(prismaPetitionRepository);
+
+    const getPetition = await petitionController.getPetition();
+    res.status(200).send(getPetition);
+  } catch (error) {
+    console.error("Error fetching petitions:", error);
+    res.status(500).json({ error: "Error fetching petitions" });
+  }
+});
+
+app.post("/petition", async (req, res) => {
+  const prismaPetityRepository = new PrismaPetitionRepository();
+  const petitionController = new PetitionController(prismaPetityRepository);
+
+  try {
+    const petitionData = req.body;
+    const createdPetition = await petitionController.postPetition(petitionData);
+    res.status(201).json(createdPetition);
+  } catch (error) {
+    res.status(500).json({ error: "Error creating petition" });
   }
 });
 

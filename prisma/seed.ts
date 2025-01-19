@@ -67,7 +67,27 @@ async function main() {
     },
   });
 
-  console.log({ user1, user2, process1, process2 });
+  const petition = await prisma.petition.create({
+    data: {
+      author: "Carlos",
+      defendantName: "Juninho",
+      processType:  "Civil",
+      partner: "Bianca",
+
+    },
+  });
+
+  const petition2 = await prisma.petition.create({
+    data: {
+      author: "João",
+      defendantName: "Morgana",
+      processType:  "Criminal",
+      partner: "Bianca",
+
+    },
+  });
+
+  console.log({ user1, user2, process1, process2, petition, petition2 });
 }
 
 main()

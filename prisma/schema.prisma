@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,36 +8,69 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  password String
+  id        String   @id @default(uuid())
+  name      String
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
 }
 
-  model Process {
-  id             String   @id @default(uuid()) // Identificador único
-  numberProcess  String   // Número do Processo
-  forumName      String   // Nome do Fórum
-  courtName      String   // Nome da Vara
-  courtNumber    String   // Número da Vara
-  author         String   // Advogado líder do processo
-  defendantName  String   // Réu
-  processStatus  String?  // Situação Processual (opcional)
-  status         String   // Situação de Status ("available" | "archived" | "processing")
-  pending        String?  // Pendências (opcional)
-  note           String?  // Observação (opcional)
-  processDate    DateTime // Data do Processo
-  partner        String   // Parceiro
-  department     String   // Departamento
-  processOutcome String   // Resultado do Processo ("won" | "lost" | "undefined")
-  value          Float    // Valor
-  portion        Int      // Parcela
-  createdAt      DateTime @default(now()) // Data de criação
-  updatedAt      DateTime @updatedAt      // Data de atualização
+model Process {
+  id               String   @id @default(uuid())
+  numberProcess    String
+  forumName        String
+  courtName        String
+  courtNumber      String
+  author           String
+  defendantName    String
+  processStatus    String? 
+  status           ProcessStatus 
+  pending          String?
+  note             String?
+  processDate      String
+  partner          String
+  department       String
+  processOutcome   ProcessOutcome
+  value            Float
+  portion          Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  finance          Finance? 
 
-  @@map("processes") // Nome da tabela no banco de dados
+  @@map("processes")
 }
 
+model Finance {
+  processId String   @id 
+  value     Float
+  portion   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  process   Process  @relation(fields: [processId], references: [id], onDelete: Cascade)
+
+  @@map("finances")
+}
+
+enum ProcessStatus {
+  available
+  archived
+  processing
+}
+
+enum ProcessOutcome {
+  won
+  lost
+  undefined
+}
+
+model Petition {
+  id            String @id @default(uuid())
+  author        String
+  defendantName String
+  processType   String
+  partner       String
+    @@map("petition")
+}

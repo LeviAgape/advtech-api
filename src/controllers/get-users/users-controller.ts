@@ -1,5 +1,5 @@
-import { GetUsersRepository, IGetUsersController } from "./protocol-users";
-import { PrismaUserRepository } from "../../repositories/get-users";
+import { IGetUsersController } from "./protocol-users";
+import { PrismaUserRepository } from "../../repositories/users";
 
 export class GetUsersController implements IGetUsersController {
   constructor(private readonly prismaUserRepository: PrismaUserRepository) {}

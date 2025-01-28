@@ -7,8 +7,8 @@ async function main() {
     data: {
       name: "Evelyn",
       password: "123",
-      createdAt: new Date("2025-01-02T19:27:44.260Z"), 
-      updatedAt: new Date("2025-01-02T19:27:44.260Z"), 
+      createdAt: new Date("2025-01-02T19:27:44.260Z"),
+      updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
   });
 
@@ -16,8 +16,8 @@ async function main() {
     data: {
       name: "Levi",
       password: "1234",
-      createdAt: new Date("2025-01-02T19:27:44.260Z"), 
-      updatedAt: new Date("2025-01-02T19:27:44.260Z"), 
+      createdAt: new Date("2025-01-02T19:27:44.260Z"),
+      updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
   });
 
@@ -33,7 +33,7 @@ async function main() {
       status: "processing",
       pending: "Aguardando documentos adicionais",
       note: "Processo iniciado com urgência.",
-      processDate: new Date("2025-01-01T10:00:00.000Z"),
+      processDate: "2023-01-02",
       partner: "Escritório XYZ",
       department: "Civil",
       processOutcome: "undefined",
@@ -56,7 +56,7 @@ async function main() {
       status: "archived",
       pending: null,
       note: "Processo concluído sem recursos.",
-      processDate: new Date("2024-12-15T10:00:00.000Z"),
+      processDate: "2023-01-01",
       partner: "Escritório Alpha",
       department: "Trabalhista",
       processOutcome: "won",
@@ -67,7 +67,41 @@ async function main() {
     },
   });
 
-  console.log({ user1, user2, process1, process2 });
+  const petition = await prisma.petition.create({
+    data: {
+      author: "Carlos",
+      defendantName: "Juninho",
+      processType: "Civil",
+      partner: "Bianca",
+    },
+  });
+
+  const petition2 = await prisma.petition.create({
+    data: {
+      author: "João",
+      defendantName: "Morgana",
+      processType: "Criminal",
+      partner: "Bianca",
+    },
+  });
+
+  await prisma.finance.create({
+    data: {
+      processId: process2.id, 
+      value: process2.value,
+      portion: process2.portion, 
+    },
+  });
+
+  await prisma.finance.create({
+    data: {
+      processId: process1.id, 
+      value: process1.value,
+      portion: process1.portion, 
+    },
+  });
+
+  console.log({ user1, user2, process1, process2, petition, petition2 });
 }
 
 main()

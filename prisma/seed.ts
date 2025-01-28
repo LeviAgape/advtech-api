@@ -7,8 +7,8 @@ async function main() {
     data: {
       name: "Evelyn",
       password: "123",
-      createdAt: new Date("2025-01-02T19:27:44.260Z"), 
-      updatedAt: new Date("2025-01-02T19:27:44.260Z"), 
+      createdAt: new Date("2025-01-02T19:27:44.260Z"),
+      updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
   });
 
@@ -16,8 +16,8 @@ async function main() {
     data: {
       name: "Levi",
       password: "1234",
-      createdAt: new Date("2025-01-02T19:27:44.260Z"), 
-      updatedAt: new Date("2025-01-02T19:27:44.260Z"), 
+      createdAt: new Date("2025-01-02T19:27:44.260Z"),
+      updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
   });
 
@@ -71,9 +71,8 @@ async function main() {
     data: {
       author: "Carlos",
       defendantName: "Juninho",
-      processType:  "Civil",
+      processType: "Civil",
       partner: "Bianca",
-
     },
   });
 
@@ -81,9 +80,24 @@ async function main() {
     data: {
       author: "João",
       defendantName: "Morgana",
-      processType:  "Criminal",
+      processType: "Criminal",
       partner: "Bianca",
+    },
+  });
 
+  await prisma.finance.create({
+    data: {
+      processId: process2.id, 
+      value: process2.value,
+      portion: process2.portion, 
+    },
+  });
+
+  await prisma.finance.create({
+    data: {
+      processId: process1.id, 
+      value: process1.value,
+      portion: process1.portion, 
     },
   });
 

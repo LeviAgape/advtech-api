@@ -7,6 +7,8 @@ import { ProcessController } from "./controllers/process/process-controller";
 import cors from "cors";
 import { PrismaPetitionRepository } from "./repositories/petition";
 import { PetitionController } from "./controllers/petition/petition-controller";
+import { FinanceController } from "./controllers/finance/finance-controller";
+import { PrismaFinanceRepository } from "./repositories/finance";
 
 config();
 const app = express();
@@ -101,6 +103,19 @@ app.post("/petition", async (req, res) => {
     res.status(201).json(createdPetition);
   } catch (error) {
     res.status(500).json({ error: "Error creating petition" });
+  }
+});
+
+app.get("/finance", async (req, res) => {
+  try {
+    const prismaFinanceRepository = new PrismaFinanceRepository();
+    const financeController = new FinanceController(prismaFinanceRepository);
+
+    const getFinance = await financeController.getFinance();
+    res.status(200).send(getFinance);
+  } catch (error) {
+    console.error("Error fetching getFinances:", error);
+    res.status(500).json({ error: "Error fetching getFinances" });
   }
 });
 

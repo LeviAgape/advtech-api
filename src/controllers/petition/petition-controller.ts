@@ -30,4 +30,23 @@ export class PetitionController implements IGetPetitionController {
       throw new Error("Error fetching processes");
     }
   }
+
+  async putPetition(
+    id: string,
+    data: {
+      author?: string;
+      defendantName?: string;
+      processType?: string;
+      partner?: string;
+    }
+  ): Promise<Petition> {
+    try {
+      const updatedPetition = await this.prismaPetityRepository.putPetition(id, data);
+      return updatedPetition;
+    } catch (error) {
+      throw new Error("Error updating petition");
+    }
+  }
+  
 }
+

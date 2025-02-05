@@ -9,4 +9,13 @@ export interface IGetPetitionController {
     processType: string;
     partner: string;
   }): Promise<Petition>;
+  putPetition(
+    id: string,
+    data: {
+      author?: string;
+      defendantName?: string;
+      processType?: string;
+      partner?: string;
+    }
+  ): Promise<Petition>;
 }

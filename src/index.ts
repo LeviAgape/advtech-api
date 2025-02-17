@@ -17,9 +17,9 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Substitua pela URL do front-end
-    methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
-    allowedHeaders: ["Content-Type", "Authorization"], // Cabeçalhos permitidos
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    allowedHeaders: ["Content-Type", "Authorization"], 
   })
 );
 
@@ -69,7 +69,7 @@ app.get("/process", async (req, res) => {
 
 app.post("/process", async (req, res) => {
   const prismaProcessRepository = new PrismaProcessRepository();
-  const processController = new ProcessController(prismaProcessRepository);
+  const processController = new ProcessController(prismaProcessRepository,);
 
   try {
     const processData = req.body;
@@ -121,19 +121,34 @@ app.get("/finance", async (req, res) => {
 
 app.put("/petition/:id", async (req, res) => {
   try {
-    const { id } = req.params; // Obtendo o id a partir dos parâmetros de URL
-    const data = req.body; // Obtendo o corpo da requisição
+    const { id } = req.params;
+    const data = req.body;
 
     const prismaPetitionRepository = new PrismaPetitionRepository();
     const petitionController = new PetitionController(prismaPetitionRepository);
 
-    const updatedPetition = await petitionController.putPetition(id, data); // Atualizando a petição
-    res.status(200).send(updatedPetition); // Enviando a resposta com a petição atualizada
+    const updatedPetition = await petitionController.putPetition(id, data);
+    res.status(200).send(updatedPetition);
   } catch (error) {
     console.error("Error fetching putPetition:", error);
     res.status(500).json({ error: "Error fetching putPetition" });
   }
 });
 
+app.put("/process/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const prismaProcessRepository = new PrismaProcessRepository();
+    const processController = new ProcessController(prismaProcessRepository);
+
+    const updatedProcess = await processController.putProcess(id, data);
+    res.status(200).send(updatedProcess);
+  } catch (error) {
+    console.error("Error fetching putPetition:", error);
+    res.status(500).json({ error: "Error fetching putPetition" });
+  }
+});
 
 app.listen(port, () => console.log(`listening on ports ${port}!`));

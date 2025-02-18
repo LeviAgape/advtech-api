@@ -11,144 +11,126 @@ import { FinanceController } from "./controllers/finance/finance-controller";
 import { PrismaFinanceRepository } from "./repositories/finance";
 
 config();
-const app = express();
 
-app.use(express.json());
+class Server {
+  private app = express();
+  private port = process.env.PORT || 8000;
 
-app.use(
-  cors({
-    origin: "http://localhost:5173", 
-    methods: ["GET", "POST", "PUT", "DELETE"], 
-    allowedHeaders: ["Content-Type", "Authorization"], 
-  })
-);
+  private prismaUserRepository = new PrismaUserRepository();
+  private prismaProcessRepository = new PrismaProcessRepository();
+  private prismaPetitionRepository = new PrismaPetitionRepository();
+  private prismaFinanceRepository = new PrismaFinanceRepository();
 
-const port = process.env.PORT || 8000;
+  private getUsersController = new GetUsersController(this.prismaUserRepository);
+  private processController = new ProcessController(this.prismaProcessRepository);
+  private petitionController = new PetitionController(this.prismaPetitionRepository);
+  private financeController = new FinanceController(this.prismaFinanceRepository);
 
-app.get("/users", async (req, res) => {
-  const prismaUserRepository = new PrismaUserRepository();
-
-  const getUsersController = new GetUsersController(prismaUserRepository);
-
-  const { body, statusCode } = await getUsersController.handle();
-
-  res.send(body).status(statusCode);
-});
-
-app.get("/list", async (req, res) => {
-  const prismaUserRepository = new PrismaUserRepository();
-
-  const getUsersController = new GetUsersController(prismaUserRepository);
-
-  const { body, statusCode } = await getUsersController.getAllUsers();
-
-  res.send(body).status(statusCode);
-});
-
-app.get("/id/:id", async (req, res) => {
-  const { id } = req.params;
-
-  const prismaUserRepository = new PrismaUserRepository();
-
-  const getUsersController = new GetUsersController(prismaUserRepository);
-
-  const { body, statusCode } = await getUsersController.findById(id);
-
-  res.send(body).status(statusCode);
-});
-
-app.get("/process", async (req, res) => {
-  const prismaProcessRepository = new PrismaProcessRepository();
-
-  const getProcessController = new ProcessController(prismaProcessRepository);
-
-  const getProcess = await getProcessController.getProcess();
-
-  res.send(getProcess).status(200);
-});
-
-app.post("/process", async (req, res) => {
-  const prismaProcessRepository = new PrismaProcessRepository();
-  const processController = new ProcessController(prismaProcessRepository,);
-
-  try {
-    const processData = req.body;
-    const createdProcess = await processController.postProcess(processData);
-    res.status(201).json(createdProcess);
-  } catch (error) {
-    res.status(500).json({ error: "Error creating process" });
+  constructor() {
+    this.app.use(express.json());
+    this.app.use(
+      cors({
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+      })
+    );
+    this.routes();
   }
-});
 
-app.get("/petition", async (req, res) => {
-  try {
-    const prismaPetitionRepository = new PrismaPetitionRepository();
-    const petitionController = new PetitionController(prismaPetitionRepository);
+  private routes() {
+    this.app.get("/users", async (req, res) => {
+      const { body, statusCode } = await this.getUsersController.handle();
+      res.status(statusCode).send(body);
+    });
 
-    const getPetition = await petitionController.getPetition();
-    res.status(200).send(getPetition);
-  } catch (error) {
-    console.error("Error fetching petitions:", error);
-    res.status(500).json({ error: "Error fetching petitions" });
+    this.app.get("/process/:defendantName", async (req, res) => {
+      const { defendantName } = req.params;
+      const processes = await this.processController.getProcessByDefendantName(defendantName);
+      res.status(200).send(processes);
+    });
+
+    this.app.get("/list", async (req, res) => {
+      const { body, statusCode } = await this.getUsersController.getAllUsers();
+      res.status(statusCode).send(body);
+    });
+
+    this.app.get("/id/:id", async (req, res) => {
+      const { id } = req.params;
+      const { body, statusCode } = await this.getUsersController.findById(id);
+      res.status(statusCode).send(body);
+    });
+
+    this.app.get("/process", async (req, res) => {
+      const processes = await this.processController.getProcess();
+      res.status(200).send(processes);
+    });
+
+    this.app.post("/process", async (req, res) => {
+      try {
+        const processData = req.body;
+        const createdProcess = await this.processController.postProcess(processData);
+        res.status(201).json(createdProcess);
+      } catch (error) {
+        res.status(500).json({ error: "Error creating process" });
+      }
+    });
+
+    this.app.get("/petition", async (req, res) => {
+      try {
+        const petitions = await this.petitionController.getPetition();
+        res.status(200).send(petitions);
+      } catch (error) {
+        res.status(500).json({ error: "Error fetching petitions" });
+      }
+    });
+
+    this.app.post("/petition", async (req, res) => {
+      try {
+        const petitionData = req.body;
+        const createdPetition = await this.petitionController.postPetition(petitionData);
+        res.status(201).json(createdPetition);
+      } catch (error) {
+        res.status(500).json({ error: "Error creating petition" });
+      }
+    });
+
+    this.app.get("/finance", async (req, res) => {
+      try {
+        const finances = await this.financeController.getFinance();
+        res.status(200).send(finances);
+      } catch (error) {
+        res.status(500).json({ error: "Error fetching finances" });
+      }
+    });
+
+    this.app.put("/petition/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const data = req.body;
+        const updatedPetition = await this.petitionController.putPetition(id, data);
+        res.status(200).send(updatedPetition);
+      } catch (error) {
+        res.status(500).json({ error: "Error updating petition" });
+      }
+    });
+
+    this.app.put("/process/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const data = req.body;
+        const updatedProcess = await this.processController.putProcess(id, data);
+        res.status(200).send(updatedProcess);
+      } catch (error) {
+        res.status(500).json({ error: "Error updating process" });
+      }
+    });
   }
-});
 
-app.post("/petition", async (req, res) => {
-  const prismaPetityRepository = new PrismaPetitionRepository();
-  const petitionController = new PetitionController(prismaPetityRepository);
-
-  try {
-    const petitionData = req.body;
-    const createdPetition = await petitionController.postPetition(petitionData);
-    res.status(201).json(createdPetition);
-  } catch (error) {
-    res.status(500).json({ error: "Error creating petition" });
+  public start() {
+    this.app.listen(this.port, () => console.log(`Listening on port ${this.port}!`));
   }
-});
+}
 
-app.get("/finance", async (req, res) => {
-  try {
-    const prismaFinanceRepository = new PrismaFinanceRepository();
-    const financeController = new FinanceController(prismaFinanceRepository);
-
-    const getFinance = await financeController.getFinance();
-    res.status(200).send(getFinance);
-  } catch (error) {
-    console.error("Error fetching getFinances:", error);
-    res.status(500).json({ error: "Error fetching getFinances" });
-  }
-});
-
-app.put("/petition/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = req.body;
-
-    const prismaPetitionRepository = new PrismaPetitionRepository();
-    const petitionController = new PetitionController(prismaPetitionRepository);
-
-    const updatedPetition = await petitionController.putPetition(id, data);
-    res.status(200).send(updatedPetition);
-  } catch (error) {
-    console.error("Error fetching putPetition:", error);
-    res.status(500).json({ error: "Error fetching putPetition" });
-  }
-});
-
-app.put("/process/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = req.body;
-
-    const prismaProcessRepository = new PrismaProcessRepository();
-    const processController = new ProcessController(prismaProcessRepository);
-
-    const updatedProcess = await processController.putProcess(id, data);
-    res.status(200).send(updatedProcess);
-  } catch (error) {
-    console.error("Error fetching putPetition:", error);
-    res.status(500).json({ error: "Error fetching putPetition" });
-  }
-});
-
-app.listen(port, () => console.log(`listening on ports ${port}!`));
+const server = new Server();
+server.start();

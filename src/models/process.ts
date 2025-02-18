@@ -19,3 +19,11 @@ export interface Process {
   createdAt: Date; // Data de criação
   updatedAt: Date; // Data de atualização
 }
+
+export interface FilterProcessFinance {
+  id?: string;
+  numberProcess: string;
+  defendantName: string;
+  value: number;
+  portion: number;
+}

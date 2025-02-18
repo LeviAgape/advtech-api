@@ -1,8 +1,13 @@
 import { Process } from "../../models/process";
 import { Finance } from "../../models/finance";
+import { FilterProcessFinance } from "../../models/process";
 
 export interface IGetProcessController {
   getProcess(): Promise<Process[]>;
+
+  getProcessByDefendantName(
+    defendantName: string
+  ): Promise<FilterProcessFinance[]>;
 
   postProcess(data: {
     numberProcess: string;

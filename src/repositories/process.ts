@@ -2,11 +2,34 @@ import { prisma } from "../database/prisma-client";
 import { Process } from "@prisma/client";
 import { IGetProcessController } from "../controllers/process/protocol-process";
 import { Finance } from "@prisma/client";
+import { FilterProcessFinance } from "../models/process";
 
 export class PrismaProcessRepository implements IGetProcessController {
   async getProcess(): Promise<Process[]> {
     const allUsers = await prisma.process.findMany();
     return allUsers;
+  }
+
+  async getProcessByDefendantName(
+    defendantName: string
+  ): Promise<FilterProcessFinance[]> {
+    const processes = await prisma.process.findMany({
+      where: {
+        defendantName: {
+          contains: defendantName,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        numberProcess: true,
+        defendantName: true,
+        value: true,
+        portion: true,
+      },
+    });
+
+    return processes;
   }
 
   async postProcess(data: {
@@ -27,7 +50,6 @@ export class PrismaProcessRepository implements IGetProcessController {
     value: number;
     portion: number;
   }): Promise<{ process: Process; finance: Finance }> {
-
     const createdProcess = await prisma.process.create({
       data: {
         ...data,
@@ -36,7 +58,7 @@ export class PrismaProcessRepository implements IGetProcessController {
 
     const createdFinance = await prisma.finance.create({
       data: {
-        processId: createdProcess.id, 
+        processId: createdProcess.id,
         value: data.value,
         portion: data.portion,
       },

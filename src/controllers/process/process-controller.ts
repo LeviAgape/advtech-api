@@ -3,9 +3,12 @@ import { Process } from "../../models/process";
 import { IGetProcessController } from "./protocol-process";
 import { Finance } from "../../models/finance";
 import { PrismaFinanceRepository } from "../../repositories/finance";
+import { FilterProcessFinance } from "../../models/process";
 
 export class ProcessController implements IGetProcessController {
-  constructor(private readonly prismaProcessRepository: PrismaProcessRepository) {}
+  constructor(
+    private readonly prismaProcessRepository: PrismaProcessRepository
+  ) {}
 
   async getProcess(): Promise<Process[]> {
     try {
@@ -13,6 +16,14 @@ export class ProcessController implements IGetProcessController {
     } catch (error) {
       throw new Error("Error fetching processes");
     }
+  }
+
+  async getProcessByDefendantName(
+    defendantName: string
+  ): Promise<FilterProcessFinance[]> {
+    return await this.prismaProcessRepository.getProcessByDefendantName(
+      defendantName
+    );
   }
 
   async postProcess(data: {
@@ -34,7 +45,8 @@ export class ProcessController implements IGetProcessController {
     portion: number;
   }): Promise<{ process: Process; finance: Finance }> {
     try {
-      const createdProcess = await this.prismaProcessRepository.postProcess(data);
+      const createdProcess =
+        await this.prismaProcessRepository.postProcess(data);
 
       const prismaFinanceRepository = new PrismaFinanceRepository();
 

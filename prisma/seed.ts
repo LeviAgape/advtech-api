@@ -7,6 +7,7 @@ async function main() {
     data: {
       name: "Evelyn",
       password: "123",
+      role: "user",
       createdAt: new Date("2025-01-02T19:27:44.260Z"),
       updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
@@ -16,6 +17,7 @@ async function main() {
     data: {
       name: "Levi",
       password: "1234",
+      role: "admin",
       createdAt: new Date("2025-01-02T19:27:44.260Z"),
       updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },

@@ -26,4 +26,5 @@ export interface FilterProcessFinance {
   defendantName: string;
   value: number;
   portion: number;
+  
 }

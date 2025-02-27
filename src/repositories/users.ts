@@ -8,6 +8,7 @@ export class PrismaUserRepository implements GetUsersRepository {
         id: "1",
         name: "Bianca",
         password: "12",
+        role: "user",
         createdAt: new Date('2025-01-02T19:27:44.260Z'),  // Criando a data com o formato ISO 8601
         updatedAt: new Date('2025-01-02T19:27:44.260Z'),  // Criando a d
     },

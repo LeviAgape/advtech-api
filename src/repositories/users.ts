@@ -1,32 +1,27 @@
-import { GetUsersRepository } from "../controllers/get-users/protocol-users";
 import { User } from "@prisma/client";
 import { prisma } from "../database/prisma-client";
+import { Users, UserLogin } from "../models/user";
+import { IGetUsersController } from "../controllers/get-users/protocol-users";
 
-export class PrismaUserRepository implements GetUsersRepository {
-  async getUsers(): Promise<User[]> {
-    return [{
-        id: "1",
-        name: "Bianca",
-        password: "12",
-        role: "user",
-        createdAt: new Date('2025-01-02T19:27:44.260Z'),  // Criando a data com o formato ISO 8601
-        updatedAt: new Date('2025-01-02T19:27:44.260Z'),  // Criando a d
-    },
-];
-  }
+export class PrismaUserRepository implements IGetUsersController {
 
   async getAllUsers(): Promise<User[]> {
     const allUsers = prisma.user.findMany();
-    return allUsers
+    return allUsers;
   }
 
-  async findById(id: string): Promise<User | null>{
+  async findById(id: string): Promise<User | null> {
     const findById = prisma.user.findUnique({
-      where: {id},
+      where: { id },
     });
-    return findById
+    return findById;
   }
-}
 
-export class PrismaUser {
+  async getUserByLogin(name: string): Promise<UserLogin | null> {
+    const getUserByLogin = await prisma.user.findUnique({
+      where: { name },
+    });
+    return getUserByLogin;
+  }
+  
 }

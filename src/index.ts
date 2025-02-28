@@ -39,10 +39,12 @@ cors({
   }
 
   private routes() {
-    this.app.get("/users", async (req, res) => {
-      const { body, statusCode } = await this.getUsersController.handle();
-      res.status(statusCode).send(body);
-    });
+
+    this.app.get("/user/:name", async (req,res) => {
+      const {name} = req.params;
+      const getNameByLogin = await this.getUsersController.getUserByLogin(name);
+      res.status(200).send(getNameByLogin)
+    })
 
     this.app.get("/process/:defendantName", async (req, res) => {
       const { defendantName } = req.params;
@@ -50,15 +52,15 @@ cors({
       res.status(200).send(processes);
     });
 
-    this.app.get("/list", async (req, res) => {
-      const { body, statusCode } = await this.getUsersController.getAllUsers();
-      res.status(statusCode).send(body);
+    this.app.get("/user", async (req, res) => {
+      const getListUser = await this.getUsersController.getAllUsers();
+      res.status(200).send(getListUser);
     });
 
     this.app.get("/id/:id", async (req, res) => {
       const { id } = req.params;
-      const { body, statusCode } = await this.getUsersController.findById(id);
-      res.status(statusCode).send(body);
+      const findUser = await this.getUsersController.findById(id);
+      res.status(200).send(findUser);
     });
 
     this.app.get("/process", async (req, res) => {

@@ -43,6 +43,7 @@ export class ProcessController implements IGetProcessController {
     processOutcome: "won" | "lost" | "undefined";
     value: number;
     portion: number;
+    updatedAt: Date; 
   }): Promise<{ process: Process; finance: Finance }> {
     try {
       const createdProcess =

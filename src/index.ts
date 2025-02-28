@@ -21,15 +21,23 @@ class Server {
   private prismaPetitionRepository = new PrismaPetitionRepository();
   private prismaFinanceRepository = new PrismaFinanceRepository();
 
-  private getUsersController = new GetUsersController(this.prismaUserRepository);
-  private processController = new ProcessController(this.prismaProcessRepository);
-  private petitionController = new PetitionController(this.prismaPetitionRepository);
-  private financeController = new FinanceController(this.prismaFinanceRepository);
+  private getUsersController = new GetUsersController(
+    this.prismaUserRepository
+  );
+  private processController = new ProcessController(
+    this.prismaProcessRepository
+  );
+  private petitionController = new PetitionController(
+    this.prismaPetitionRepository
+  );
+  private financeController = new FinanceController(
+    this.prismaFinanceRepository
+  );
 
   constructor() {
     this.app.use(express.json());
     this.app.use(
-cors({
+      cors({
         origin: "http://localhost:5173",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -39,16 +47,16 @@ cors({
   }
 
   private routes() {
-
-    this.app.get("/user/:name", async (req,res) => {
-      const {name} = req.params;
+    this.app.get("/user/:name", async (req, res) => {
+      const { name } = req.params;
       const getNameByLogin = await this.getUsersController.getUserByLogin(name);
-      res.status(200).send(getNameByLogin)
-    })
+      res.status(200).send(getNameByLogin);
+    });
 
     this.app.get("/process/:defendantName", async (req, res) => {
       const { defendantName } = req.params;
-      const processes = await this.processController.getProcessByDefendantName(defendantName);
+      const processes =
+        await this.processController.getProcessByDefendantName(defendantName);
       res.status(200).send(processes);
     });
 
@@ -71,7 +79,8 @@ cors({
     this.app.post("/process", async (req, res) => {
       try {
         const processData = req.body;
-        const createdProcess = await this.processController.postProcess(processData);
+        const createdProcess =
+          await this.processController.postProcess(processData);
         res.status(201).json(createdProcess);
       } catch (error) {
         res.status(500).json({ error: "Error creating process" });
@@ -90,7 +99,8 @@ cors({
     this.app.post("/petition", async (req, res) => {
       try {
         const petitionData = req.body;
-        const createdPetition = await this.petitionController.postPetition(petitionData);
+        const createdPetition =
+          await this.petitionController.postPetition(petitionData);
         res.status(201).json(createdPetition);
       } catch (error) {
         res.status(500).json({ error: "Error creating petition" });
@@ -110,7 +120,10 @@ cors({
       try {
         const { id } = req.params;
         const data = req.body;
-        const updatedPetition = await this.petitionController.putPetition(id, data);
+        const updatedPetition = await this.petitionController.putPetition(
+          id,
+          data
+        );
         res.status(200).send(updatedPetition);
       } catch (error) {
         res.status(500).json({ error: "Error updating petition" });
@@ -121,7 +134,10 @@ cors({
       try {
         const { id } = req.params;
         const data = req.body;
-        const updatedProcess = await this.processController.putProcess(id, data);
+        const updatedProcess = await this.processController.putProcess(
+          id,
+          data
+        );
         res.status(200).send(updatedProcess);
       } catch (error) {
         res.status(500).json({ error: "Error updating process" });
@@ -130,7 +146,9 @@ cors({
   }
 
   public start() {
-    this.app.listen(this.port, () => console.log(`Listening on port ${this.port}!`));
+    this.app.listen(this.port, () =>
+      console.log(`Listening on port ${this.port}!`)
+    );
   }
 }
 

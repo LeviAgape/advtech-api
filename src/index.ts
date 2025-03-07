@@ -9,6 +9,8 @@ import { PrismaPetitionRepository } from "./repositories/petition";
 import { PetitionController } from "./controllers/petition/petition-controller";
 import { FinanceController } from "./controllers/finance/finance-controller";
 import { PrismaFinanceRepository } from "./repositories/finance";
+import { PrismaPaymentProcessRepository } from "./repositories/paymentProcess";
+import { PaymentProcessController } from "./controllers/paymentProcess/paymentProcess-controller";
 
 config();
 
@@ -20,6 +22,7 @@ class Server {
   private prismaProcessRepository = new PrismaProcessRepository();
   private prismaPetitionRepository = new PrismaPetitionRepository();
   private prismaFinanceRepository = new PrismaFinanceRepository();
+  private prismaPaymentProcessRepository = new PrismaPaymentProcessRepository();
 
   private getUsersController = new GetUsersController(
     this.prismaUserRepository
@@ -32,6 +35,9 @@ class Server {
   );
   private financeController = new FinanceController(
     this.prismaFinanceRepository
+  );
+  private paymentProcessController = new PaymentProcessController(
+    this.prismaPaymentProcessRepository
   );
 
   constructor() {
@@ -69,6 +75,12 @@ class Server {
       const { id } = req.params;
       const findUser = await this.getUsersController.findById(id);
       res.status(200).send(findUser);
+    });
+
+    this.app.get("/paymentProcess", async (req, res) => {
+      const getLisPayment =
+        await this.paymentProcessController.getPaymentProcess();
+      res.status(200).send(getLisPayment);
     });
 
     this.app.get("/process", async (req, res) => {

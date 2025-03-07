@@ -30,8 +30,8 @@ export class PrismaPetitionRepository implements IGetPetitionController {
     }
   ): Promise<Petition> {
     const updatedPetition = await prisma.petition.update({
-      where: { id }, 
-      data, 
+      where: { id },
+      data,
     });
     return updatedPetition;
   }

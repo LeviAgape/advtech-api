@@ -112,21 +112,39 @@ async function main() {
 
   await prisma.finance.create({
     data: {
-      processId: process2.id, 
+      processId: process2.id,
       value: process2.value,
-      portion: process2.portion, 
+      portion: process2.portion,
     },
   });
 
   await prisma.finance.create({
     data: {
-      processId: process1.id, 
+      processId: process1.id,
       value: process1.value,
-      portion: process1.portion, 
+      portion: process1.portion,
     },
   });
 
-  console.log({ user1, user2, process1, process2, process3, petition, petition2 });
+  const payment1 = await prisma.paymentProcess.create({
+    data: {
+      processId: process1.id,
+      paidAmount: 2000,
+      paidPortion: 3,
+      paidDate: "2023-01-01",
+    },
+  });
+
+  console.log({
+    user1,
+    user2,
+    process1,
+    process2,
+    process3,
+    petition,
+    petition2,
+    payment1,
+  });
 }
 
 main()

@@ -41,12 +41,13 @@ export class PetitionController implements IGetPetitionController {
     }
   ): Promise<Petition> {
     try {
-      const updatedPetition = await this.prismaPetityRepository.putPetition(id, data);
+      const updatedPetition = await this.prismaPetityRepository.putPetition(
+        id,
+        data
+      );
       return updatedPetition;
     } catch (error) {
       throw new Error("Error updating petition");
     }
   }
-  
 }
-

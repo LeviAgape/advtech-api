@@ -59,19 +59,12 @@ class Server {
       res.status(200).send(getNameByLogin);
     });
 
-    this.app.get("/process/:defendantName", async (req, res) => {
-      const { defendantName } = req.params;
-      const processes =
-        await this.processController.getProcessByDefendantName(defendantName);
-      res.status(200).send(processes);
-    });
-
     this.app.get("/user", async (req, res) => {
       const getListUser = await this.getUsersController.getAllUsers();
       res.status(200).send(getListUser);
     });
 
-    this.app.get("/id/:id", async (req, res) => {
+    this.app.get("/user/role/:id", async (req, res) => {
       const { id } = req.params;
       const findUser = await this.getUsersController.findById(id);
       res.status(200).send(findUser);
@@ -81,6 +74,13 @@ class Server {
       const getListPayment =
         await this.paymentProcessController.getPaymentProcess();
       res.status(200).send(getListPayment);
+    });
+
+    this.app.get("/process/:defendantName", async (req, res) => {
+      const { defendantName } = req.params;
+      const processes =
+        await this.processController.getProcessByDefendantName(defendantName);
+      res.status(200).send(processes);
     });
 
     this.app.post("/finance/paymentProcess/:id", async (req, res) => {
@@ -117,6 +117,20 @@ class Server {
       }
     });
 
+    this.app.put("/process/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const data = req.body;
+        const updatedProcess = await this.processController.putProcess(
+          id,
+          data
+        );
+        res.status(200).send(updatedProcess);
+      } catch (error) {
+        res.status(500).json({ error: "Error updating process" });
+      }
+    });
+
     this.app.get("/petition", async (req, res) => {
       try {
         const petitions = await this.petitionController.getPetition();
@@ -137,15 +151,6 @@ class Server {
       }
     });
 
-    this.app.get("/finance", async (req, res) => {
-      try {
-        const finances = await this.financeController.getFinance();
-        res.status(200).send(finances);
-      } catch (error) {
-        res.status(500).json({ error: "Error fetching finances" });
-      }
-    });
-
     this.app.put("/petition/:id", async (req, res) => {
       try {
         const { id } = req.params;
@@ -160,17 +165,12 @@ class Server {
       }
     });
 
-    this.app.put("/process/:id", async (req, res) => {
+    this.app.get("/finance", async (req, res) => {
       try {
-        const { id } = req.params;
-        const data = req.body;
-        const updatedProcess = await this.processController.putProcess(
-          id,
-          data
-        );
-        res.status(200).send(updatedProcess);
+        const finances = await this.financeController.getFinance();
+        res.status(200).send(finances);
       } catch (error) {
-        res.status(500).json({ error: "Error updating process" });
+        res.status(500).json({ error: "Error fetching finances" });
       }
     });
   }

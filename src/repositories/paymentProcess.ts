@@ -9,4 +9,23 @@ export class PrismaPaymentProcessRepository
     const allPayment = await prisma.paymentProcess.findMany();
     return allPayment;
   }
+
+  async postPaymentProcess(
+    processId: string,
+    data: {
+      paidAmount: number;
+      paidPortion: number;
+      paidDate: string;
+    }
+  ): Promise<PaymentProcess> {
+    const createdPaymentProcess = await prisma.paymentProcess.create({
+      data: {
+        processId,
+        paidAmount: data.paidAmount,
+        paidPortion: data.paidPortion,
+        paidDate: data.paidDate,
+      },
+    });
+    return createdPaymentProcess;
+  }
 }

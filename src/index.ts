@@ -78,9 +78,27 @@ class Server {
     });
 
     this.app.get("/paymentProcess", async (req, res) => {
-      const getLisPayment =
+      const getListPayment =
         await this.paymentProcessController.getPaymentProcess();
-      res.status(200).send(getLisPayment);
+      res.status(200).send(getListPayment);
+    });
+
+    this.app.post("/finance/paymentProcess/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const paymentData = req.body;
+
+        const newPayment =
+          await this.paymentProcessController.postPaymentProcess(
+            id,
+            paymentData
+          );
+
+        res.status(200).send(newPayment);
+      } catch (error) {
+        console.error("Erro ao criar pagamento:", error);
+        res.status(500).send({ error: "Erro creating payment" });
+      }
     });
 
     this.app.get("/process", async (req, res) => {

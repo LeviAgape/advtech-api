@@ -32,6 +32,19 @@ export class PrismaProcessRepository implements IGetProcessController {
     return processes;
   }
 
+  async getFilterProcessFinance(): Promise<FilterProcessFinance[]> {
+    const getFilterProcessFinance = await prisma.process.findMany({
+      select: {
+        id: true,
+        numberProcess: true,
+        defendantName: true,
+        value: true,
+        portion: true,
+      },
+    });
+    return getFilterProcessFinance;
+  }
+
   async postProcess(data: {
     numberProcess: string;
     forumName: string;

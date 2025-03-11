@@ -26,6 +26,10 @@ export class ProcessController implements IGetProcessController {
     );
   }
 
+  async getFilterProcessFinance(): Promise<FilterProcessFinance[]> {
+    return await this.prismaProcessRepository.getFilterProcessFinance();
+  }
+
   async postProcess(data: {
     numberProcess: string;
     forumName: string;
@@ -43,7 +47,7 @@ export class ProcessController implements IGetProcessController {
     processOutcome: "won" | "lost" | "undefined";
     value: number;
     portion: number;
-    updatedAt: Date; 
+    updatedAt: Date;
   }): Promise<{ process: Process; finance: Finance }> {
     try {
       const createdProcess =

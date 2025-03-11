@@ -10,7 +10,7 @@ import { PetitionController } from "./controllers/petition/petition-controller";
 import { FinanceController } from "./controllers/finance/finance-controller";
 import { PrismaFinanceRepository } from "./repositories/finance";
 import { PrismaPaymentProcessRepository } from "./repositories/paymentProcess";
-import { PaymentProcessController } from "./controllers/paymentProcess/paymentProcess-controller";
+import { PaymentProcessController } from "./controllers/paymentProcess/payment-process-controller";
 
 config();
 
@@ -81,6 +81,12 @@ class Server {
       const processes =
         await this.processController.getProcessByDefendantName(defendantName);
       res.status(200).send(processes);
+    });
+
+    this.app.get("/financeProcess", async (req, res) => {
+      const FilterProcessFinance =
+        await this.processController.getFilterProcessFinance();
+      res.status(200).send(FilterProcessFinance);
     });
 
     this.app.post("/finance/paymentProcess/:id", async (req, res) => {

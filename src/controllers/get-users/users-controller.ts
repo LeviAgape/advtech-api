@@ -1,36 +1,15 @@
 import { IGetUsersController } from "./protocol-users";
 import { PrismaUserRepository } from "../../repositories/users";
+import { UserLogin, Users } from "../../models/user";
 
 export class GetUsersController implements IGetUsersController {
   constructor(private readonly prismaUserRepository: PrismaUserRepository) {}
 
-  async handle() {
+  async getAllUsers(): Promise<Users[]> {
     try {
-      const users = await this.prismaUserRepository.getUsers();
-      return {
-        statusCode: 200,
-        body: users,
-      };
+      return await this.prismaUserRepository.getAllUsers();
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: "Error",
-      };
-    }
-  }
-
-  async getAllUsers() {
-    try {
-      const allUsers = await this.prismaUserRepository.getAllUsers();
-      return {
-        statusCode: 200,
-        body: allUsers,
-      };
-    } catch (error) {
-      return {
-        statusCode: 500,
-        body: "error",
-      };
+      throw new Error("Error fetching processes");
     }
   }
 
@@ -47,5 +26,9 @@ export class GetUsersController implements IGetUsersController {
         body: "error",
       };
     }
+  }
+
+  async getUserByLogin(name: string): Promise<UserLogin | null> {
+    return await this.prismaUserRepository.getUserByLogin(name);
   }
 }

@@ -7,6 +7,7 @@ async function main() {
     data: {
       name: "Evelyn",
       password: "123",
+      role: "user",
       createdAt: new Date("2025-01-02T19:27:44.260Z"),
       updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
@@ -16,6 +17,7 @@ async function main() {
     data: {
       name: "Levi",
       password: "1234",
+      role: "admin",
       createdAt: new Date("2025-01-02T19:27:44.260Z"),
       updatedAt: new Date("2025-01-02T19:27:44.260Z"),
     },
@@ -67,6 +69,29 @@ async function main() {
     },
   });
 
+  const process3 = await prisma.process.create({
+    data: {
+      numberProcess: "2025/002",
+      forumName: "Fórum Norte",
+      courtName: "Vara Trabalhista",
+      courtNumber: "2",
+      author: "Dra. Ana Pereira",
+      defendantName: "Carlos Almeida",
+      processStatus: "Arquivado",
+      status: "archived",
+      pending: null,
+      note: "Processo concluído sem recursos.",
+      processDate: "2023-01-01",
+      partner: "Escritório Alpha",
+      department: "Trabalhista",
+      processOutcome: "won",
+      value: 900000000000,
+      portion: 5,
+      createdAt: new Date("2024-12-15T09:00:00.000Z"),
+      updatedAt: new Date("2024-12-15T09:00:00.000Z"),
+    },
+  });
+
   const petition = await prisma.petition.create({
     data: {
       author: "Carlos",
@@ -87,21 +112,39 @@ async function main() {
 
   await prisma.finance.create({
     data: {
-      processId: process2.id, 
+      processId: process2.id,
       value: process2.value,
-      portion: process2.portion, 
+      portion: process2.portion,
     },
   });
 
   await prisma.finance.create({
     data: {
-      processId: process1.id, 
+      processId: process1.id,
       value: process1.value,
-      portion: process1.portion, 
+      portion: process1.portion,
     },
   });
 
-  console.log({ user1, user2, process1, process2, petition, petition2 });
+  const payment1 = await prisma.paymentProcess.create({
+    data: {
+      processId: process1.id,
+      paidAmount: 2000,
+      paidPortion: 3,
+      paidDate: "2023-01-01",
+    },
+  });
+
+  console.log({
+    user1,
+    user2,
+    process1,
+    process2,
+    process3,
+    petition,
+    petition2,
+    payment1,
+  });
 }
 
 main()

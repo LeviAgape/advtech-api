@@ -20,4 +20,19 @@ export class PrismaPetitionRepository implements IGetPetitionController {
       },
     });
   }
+  async putPetition(
+    id: string,
+    data: {
+      author?: string;
+      defendantName?: string;
+      processType?: string;
+      partner?: string;
+    }
+  ): Promise<Petition> {
+    const updatedPetition = await prisma.petition.update({
+      where: { id },
+      data,
+    });
+    return updatedPetition;
+  }
 }

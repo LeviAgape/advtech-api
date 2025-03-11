@@ -9,7 +9,8 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
-  name      String
+  name      String   @unique
+  role      String
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,6 +39,7 @@ model Process {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   finance          Finance? 
+  paymentProcess  PaymentProcess?
 
   @@map("processes")
 }
@@ -52,6 +54,17 @@ model Finance {
   process   Process  @relation(fields: [processId], references: [id], onDelete: Cascade)
 
   @@map("finances")
+}
+
+model PaymentProcess {
+  processId String @id
+  paidAmount Float
+  paidPortion Int
+  paidDate String
+
+  process   Process  @relation(fields: [processId], references: [id], onDelete: Cascade)
+
+  @@map("payment_process")
 }
 
 enum ProcessStatus {
